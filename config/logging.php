@@ -4,6 +4,11 @@ use Monolog\Handler\NullHandler;
 use Monolog\Handler\StreamHandler;
 use Monolog\Handler\SyslogUdpHandler;
 
+/**
+ * laravel 日志基于monolog库
+ * 使用栈堆的方式记录日志
+ *
+ */
 return [
 
     /*

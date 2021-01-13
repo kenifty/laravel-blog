@@ -1,6 +1,5 @@
 <?php
 
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -15,9 +14,12 @@ use Illuminate\Support\Facades\Route;
 */
 
 
-Route::middleware('auth:api')->get('/user', function (Request $request) {
-    return $request->user();
-});
+//Route::middleware('auth:api')->get('/user', function (Request $request) {
+//    return $request->user();
+//});
 
 
-Route::apiResource('articles','ArticleController')->except(['destroy']);
+Route::resource('articles','ArticleController');
+//Route::post('/articles/add2',[\App\Api\Controllers\ArticleController::class,'add2']);
+Route::get('test/index',[\App\Api\Controllers\TestController::class,'index']);
+Route::get('test/cache',[\App\Api\Controllers\TestController::class,'cache']);

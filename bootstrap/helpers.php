@@ -1,6 +1,8 @@
 <?php
 
-
+/**
+ * 简化好友数显示格式 千位置换成k
+ */
 if (!function_exists('friendly_numbers')) {
     function friendly_numbers($n,$p = 1)
     {
@@ -14,6 +16,10 @@ if (!function_exists('friendly_numbers')) {
     }
 }
 
+
+/**
+ * 判断用户是否在线
+ */
 if (!function_exists('is_online')) {
     function is_online($user)
     {
@@ -39,7 +45,40 @@ if (!function_exists('is_online')) {
 
             return $result->occupied;
         } catch (Exception $exception) {
+            \Illuminate\Support\Facades\Log::channel('single')->error('用户在线状态获取失败！');
             return false;
         }
+    }
+}
+
+
+/**
+ * 解析请求中的include参数 表示关联关系 以,分隔 转化成数组
+ */
+if (!function_exists('parse_includes')) {
+    function parse_includes($includes = null)
+    {
+        if (is_null($includes)){
+            $includes = request('include');
+        }
+
+        if (!is_array($includes)) {
+            $includes = array_filter(explode(',',$includes));
+        }
+
+        $parsed = [];
+        foreach ($includes as $include) {
+            $nested = explode('.',$include);
+
+            $part = array_shift($nested);
+            $parsed[] = $part;
+
+            while (count($nested) > 0) {
+                $part .= '.' .array_shift($nested);
+                $parsed = $part;
+            }
+        }
+
+        return array_values(array_unique($parsed));
     }
 }

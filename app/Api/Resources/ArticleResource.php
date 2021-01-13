@@ -4,7 +4,7 @@
 namespace App\Api\Resources;
 
 
-class ArticleResource extends Resources
+class ArticleResource extends Resource
 {
 
 }
