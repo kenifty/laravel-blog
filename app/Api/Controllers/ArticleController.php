@@ -19,6 +19,11 @@ use Illuminate\Support\Facades\Redis;
 class ArticleController extends Controller
 {
 
+    public function __construct()
+    {
+        $this->middleware(['auth:api'])->except(['index', 'show', 'search']);
+    }
+
     public function index(Request $request)
     {
         // 判断是否文章搜索
@@ -75,6 +80,7 @@ class ArticleController extends Controller
      */
     public function store(Request $request)
     {
+//        $this->authorize('store',Article::class);
         $article = new Article();
 
         $article->user_id = Auth::id()??1;
@@ -89,6 +95,24 @@ class ArticleController extends Controller
         return $this->withNoContent();
     }
 
+
+
+    public function update(ArticleRequest $request,$id)
+    {
+        $article = Article::filter()->findOrFail($id);
+
+        $this->authorize('update',$article);
+
+        $article->title = $request->input('title');
+        $article->preview = $request->input('preview');
+        $article->state = $request->input('state');
+        $article->updated_at = now();
+        $article->save();
+
+        $article->tags()->sync($request->input('tags'));
+
+        return $this->withNoContent();
+    }
 
 
 
